@@ -1,0 +1,6 @@
+values = list(map(int, input().split()))
+k = int(input())
+maxValue = max(values)
+# print('maxValue', maxValue)
+result = sum(values) - maxValue + maxValue * (2**k)
+print(result)
