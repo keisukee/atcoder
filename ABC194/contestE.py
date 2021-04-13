@@ -1,41 +1,21 @@
-from collections import deque
-N, M = list(map(int, input().split()))
-sequences = list(map(int, input().split()))
+import collections
+N, M = map(int, input().split())
+A = list(map(int, input().split()))
 
-def get_min_positive(sequences, length):
-    queue = deque(sequences[0 : length+1])
-    encounted = set(queue)
-    min_candidate = min(queue)-1
+bucket = collections.Counter(A[:M])
+ans = float('inf')
 
-    for i in range(length, len(sequences)-length+1):
-        num = sequences[i]
+def mex(bucket):
+    for i in range(N+1):
+        if bucket[i] == 0:
+            return i
 
-        queue.append(num)
-        encounted.add(num)
+ans = min(ans, mex(bucket))
+for i in range(N-M):
+    bucket[A[i]] -= 1
+    bucket[A[M+i]] += 1
 
-        popped_value = queue.popleft()
-        del encounted[popped_value]
+    if A[i] < ans and bucket[A[i]] == 0:
+        ans = A[i]
 
-        if popped_value < 0:
-            continue
-
-        if popped_value < min_candidate:
-            min_candidate = popped_value
-
-
-        # value = heapq.heappop(minheap)
-        # min_candidate = value - 1
-        # encounted.add(value)
-        # if min_candidate >= 0 and min_candidate not in encounted:
-        #     return min_candidate
-
-        # min_candidate = value
-
-    return min_candidate + 1
-
-min_candidate = float('inf')
-# for i in range(N-M+1):
-#     get_min_positive(sequences, N)
-# print(min_candidate)
-
-
+print(ans)
